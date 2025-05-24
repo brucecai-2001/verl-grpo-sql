@@ -8,11 +8,9 @@ from datasets import Dataset
 from chardet.universaldetector import UniversalDetector
 from tqdm import tqdm
 
-SYSTEM_PROMPT = """
-You are a data analyst, and you need to generate an SQLite3 query statement based on the schema provided below.
-"""
-
 USER_PROMPT = """
+You are a data analyst, and you need to generate an SQLite3 query statement based on the schema provided below.
+
 ## Schemas
 The schemas are the following:
 {schemas}
@@ -69,7 +67,7 @@ def get_schema_description_prompt(description_path: str):
 
 
 if __name__ == '__main__':
-    base_path = '/Users/caixinyu/datasets/BIRD'
+    base_path = '/root/autodl-tmp/BIRD'
     database_path = base_path + '/' + 'database'
     question_path = base_path + '/dev.json'
 

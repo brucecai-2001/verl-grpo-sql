@@ -21,6 +21,9 @@ def compute_score(solution_str: str, ground_truth: dict) -> float:
     # format reward
     format_reward = 1.0 if match_result else 0.0
 
+    if match_result is None:
+        return 0.0
+
     # acc reward
     rollout_sql = match_result.group(2)
     gt_sql = ground_truth["ground_truth_sql"]
