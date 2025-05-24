@@ -14,15 +14,23 @@ def compute_score(solution_str: str, ground_truth: dict) -> float:
         float: 0.2 * format_reward + 0.8 * acc_reward
     """
 
-    # extract sql
+    # extract sql in <think> cot </think> <answer> ```sql SQL ``` </answer>
     pattern = re.compile(r"<think>\s*([\s\S]+?)\s*</think>\s*<answer>\s*```sql\s*([\s\S]+?)\s*```\s*</answer>", re.DOTALL)
     match_result = re.fullmatch(pattern, solution_str)
-
     # format reward
     format_reward = 1.0 if match_result else 0.0
 
-    if match_result is None:
-        return 0.0
+    if match_result is not None:
+        rollout_sql = match_result.group(2)
+    else:
+        # try to extract ```sql SQL ```
+        pattern2 = re.compile(r"```sql\s*([\s\S]+?)\s*```", re.DOTALL)
+        match_result2 = re.search(pattern2, solution_str)
+        if match_result2 is not None:
+            rollout_sql = match_result2.group(1)
+            format_reward = 0.5
+        else:
+            return 0.0
 
     # acc reward
     rollout_sql = match_result.group(2)

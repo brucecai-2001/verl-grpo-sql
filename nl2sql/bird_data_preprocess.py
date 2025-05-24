@@ -9,7 +9,8 @@ from chardet.universaldetector import UniversalDetector
 from tqdm import tqdm
 
 USER_PROMPT = """
-You are a data analyst, and you need to generate an SQLite3 query statement based on the schema provided below.
+You are a data analyst, and you need to generate an SQLite3 query statement based on the schema provided below. \n
+You have to return in the following format: <think> your chain of thought </think> <answer> ```sql PUT YOUR SQL HERE ``` </answer>
 
 ## Schemas
 The schemas are the following:
@@ -17,9 +18,12 @@ The schemas are the following:
 
 ## Constraint
 1.  require sql in sqllite3
+2. The reasoning process MUST BE enclosed within <think> </think> tags. The final answer MUST BE put within <answer> </answer> tags.
+3. sql in  <answer> </answer> tags should in ```sql YOUR SQL ```
 
 User query: {query}
 External knowledge: {evidence}
+
 """
 
 TRAIN_SIZE = 1300
@@ -145,5 +149,5 @@ if __name__ == '__main__':
     train_dataset = train_dataset.map(function=make_map_fn("train"), with_indices=True)
     eval_dataset = eval_dataset.map(function=make_map_fn("eval"), with_indices=True)
 
-    train_dataset.to_parquet("./train.parquet")
-    eval_dataset.to_parquet("./eval.parquet")
+    train_dataset.to_parquet(base_path + '/train.parquet')
+    eval_dataset.to_parquet(base_path+ '/eval.parquet')
