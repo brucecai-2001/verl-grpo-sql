@@ -33,7 +33,6 @@ def compute_score(solution_str: str, ground_truth: dict) -> float:
             return 0.0
 
     # acc reward
-    rollout_sql = match_result.group(2)
     gt_sql = ground_truth["ground_truth_sql"]
     db_path = ground_truth["db_path"]
 

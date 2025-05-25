@@ -883,10 +883,15 @@ class RayPPOTrainer:
 
         for epoch in range(self.config.trainer.total_epochs):
             for batch_dict in self.train_dataloader:
+                if self.global_steps in [89,147,197]:
+                    self.global_steps += 1
+                    progress_bar.update(1)
+                    continue
+
                 metrics = {}
                 timing_raw = {}
                 batch: DataProto = DataProto.from_single_dict(batch_dict)
-
+                
                 # pop those keys for generation
                 batch_keys_to_pop = ["input_ids", "attention_mask", "position_ids"]
                 non_tensor_batch_keys_to_pop = ["raw_prompt_ids"]
