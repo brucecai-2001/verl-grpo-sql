@@ -12,8 +12,8 @@ CLIENT = OpenAI(
     base_url=openai_api_base,
 )
 
-MODEL = "/root/autodl-tmp/Qwen2.5-7B-Instruct"
-EVAL_DATESET = "/root/autodl-tmp/BIRD/eval.parquet"
+MODEL = "/root/autodl-tmp/Qwen2.5-7B-GRPO/"
+EVAL_DATESET = {"eval": "/root/autodl-tmp/BIRD/eval.parquet"}
 
 def invoke(prompt: str, model_pth: str) -> str:
     """
@@ -26,7 +26,7 @@ def invoke(prompt: str, model_pth: str) -> str:
         messages=[
             {"role": "user", "content": prompt},
         ],
-        max_tokens=32768,
+        max_tokens=65536,
         temperature=0.6,
         top_p=0.95,
         extra_body={
@@ -36,7 +36,7 @@ def invoke(prompt: str, model_pth: str) -> str:
     return chat_response.choices[0].message.content
 
 if __name__ == '__main__':
-    eval_set = load_dataset(path=EVAL_DATESET)
+    eval_set = load_dataset("parquet", data_files=EVAL_DATESET, split="eval")
     num = len(eval_set)
     correct = 0
     
@@ -49,6 +49,7 @@ if __name__ == '__main__':
 
         # rollout
         generated_str = invoke(prompt, MODEL)
+        print(generated_str)
 
         # parse
         pattern = re.compile(r"```sql\s*([\s\S]+?)\s*```", re.DOTALL)
