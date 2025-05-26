@@ -2,6 +2,7 @@ import re
 from openai import OpenAI
 from datasets import load_dataset
 from utils import query_database
+from tqdm import tqdm  # 导入tqdm库用于进度条显示
 
 # Set OpenAI's API key and API base to use vLLM's API server.
 openai_api_key = "EMPTY"
@@ -38,7 +39,9 @@ if __name__ == '__main__':
     eval_set = load_dataset(path=EVAL_DATESET)
     num = len(eval_set)
     correct = 0
-    for data in eval_set:
+    
+    # 使用tqdm包装迭代器，创建进度条
+    for data in tqdm(eval_set, desc="Evaluating", total=num):
         prompt = data["prompt"][0]["content"]
         db = data["reward_model"]["ground_truth"]["db_path"]
         gt_sql = data["reward_model"]["ground_truth"]["ground_truth_sql"]
@@ -57,4 +60,7 @@ if __name__ == '__main__':
                 correct += 1
         else:
             continue
-            
+    
+    # 计算准确率并显示最终结果
+    accuracy = correct / num if num > 0 else 0
+    print(f"\nEvaluation completed! Accuracy: {accuracy:.2%} ({correct}/{num})")
