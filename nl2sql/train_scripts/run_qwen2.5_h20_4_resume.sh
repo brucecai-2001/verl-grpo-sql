@@ -43,5 +43,5 @@ python3 -m verl.trainer.main_ppo \
     trainer.max_actor_ckpt_to_keep=1 \
     trainer.default_local_dir=/root/autodl-tmp/checkpoints \
     trainer.resume_mode=resume_path \
-    trainer.resume_from_path=/root/autodl-tmp/checkpoints/global_step_180 \
+    trainer.resume_from_path=/root/autodl-tmp/checkpoints/global_step_220 \
     trainer.total_epochs=1 $@
