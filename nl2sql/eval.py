@@ -1,4 +1,5 @@
 import re
+
 from openai import OpenAI
 from datasets import load_dataset
 from utils import query_database
@@ -7,12 +8,16 @@ from tqdm import tqdm  # 导入tqdm库用于进度条显示
 # Set OpenAI's API key and API base to use vLLM's API server.
 openai_api_key = "EMPTY"
 openai_api_base = "http://localhost:8000/v1"
+deepseek_api_base = "https://api.deepseek.com"
+deepseek_api_key = ""
+
 CLIENT = OpenAI(
     api_key=openai_api_key,
     base_url=openai_api_base,
 )
 
-MODEL = "/root/autodl-tmp/Qwen2.5-7B-Instruct"
+LOCAL_MODEL = "/root/autodl-tmp/Qwen2.5-7B-Instruct"
+DEEPSEEK_MODEL = "deepseek-chat"
 EVAL_DATESET = "/root/autodl-tmp/BIRD/eval.parquet"
 
 def invoke(prompt: str, model_pth: str) -> str:
@@ -48,7 +53,7 @@ if __name__ == '__main__':
         gt_res = query_database(db_path=db, sql=gt_sql)
 
         # rollout
-        generated_str = invoke(prompt, MODEL)
+        generated_str = invoke(prompt, LOCAL_MODEL)
 
         # parse
         pattern = re.compile(r"```sql\s*([\s\S]+?)\s*```", re.DOTALL)
