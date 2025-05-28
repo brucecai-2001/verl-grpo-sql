@@ -9,16 +9,16 @@ from tqdm import tqdm  # 导入tqdm库用于进度条显示
 openai_api_key = "EMPTY"
 openai_api_base = "http://localhost:8000/v1"
 deepseek_api_base = "https://api.deepseek.com"
-deepseek_api_key = ""
+deepseek_api_key = "sk-18b048e9704a42e4bc119ca25484b173"
 
 CLIENT = OpenAI(
-    api_key=openai_api_key,
-    base_url=openai_api_base,
+    api_key=deepseek_api_key,
+    base_url=deepseek_api_base,
 )
 
 LOCAL_MODEL = "/root/autodl-tmp/Qwen2.5-7B-Instruct"
 DEEPSEEK_MODEL = "deepseek-chat"
-EVAL_DATESET = "/root/autodl-tmp/BIRD/eval.parquet"
+EVAL_DATESET = {"eval": "/root/autodl-tmp/BIRD/eval.parquet"}
 
 def invoke(prompt: str, model_pth: str) -> str:
     """
@@ -31,12 +31,13 @@ def invoke(prompt: str, model_pth: str) -> str:
         messages=[
             {"role": "user", "content": prompt},
         ],
-        max_tokens=65536,
+        #max_tokens=65536,
         temperature=0.6,
-        top_p=0.95,
-        extra_body={
-            "top_k": 20,
-        },
+        #top_p=0.95,
+        #extra_body={
+        #    "top_k": 20,
+        #},
+        stream=False
     )
     return chat_response.choices[0].message.content
 
@@ -53,7 +54,7 @@ if __name__ == '__main__':
         gt_res = query_database(db_path=db, sql=gt_sql)
 
         # rollout
-        generated_str = invoke(prompt, LOCAL_MODEL)
+        generated_str = invoke(prompt, DEEPSEEK_MODEL)
 
         # parse
         pattern = re.compile(r"```sql\s*([\s\S]+?)\s*```", re.DOTALL)
