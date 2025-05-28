@@ -9,7 +9,7 @@ from tqdm import tqdm  # 导入tqdm库用于进度条显示
 openai_api_key = "EMPTY"
 openai_api_base = "http://localhost:8000/v1"
 deepseek_api_base = "https://api.deepseek.com"
-deepseek_api_key = "sk-18b048e9704a42e4bc119ca25484b173"
+deepseek_api_key = ""
 
 CLIENT = OpenAI(
     api_key=deepseek_api_key,
